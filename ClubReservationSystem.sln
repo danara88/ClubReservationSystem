@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33110.190
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationSystem.UI", "ReservationSystem.UI\ReservationSystem.UI.csproj", "{9B32EF25-7CAF-4A9B-B3C4-F7A02F2A6F8E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationSystem.UI", "ReservationSystem.UI\ReservationSystem.UI.csproj", "{9B32EF25-7CAF-4A9B-B3C4-F7A02F2A6F8E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationSystem.Application", "ReservationSystem.Application\ReservationSystem.Application.csproj", "{D2B35338-F545-4C0F-B19A-87F147F048FF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationSystem.Application", "ReservationSystem.Application\ReservationSystem.Application.csproj", "{D2B35338-F545-4C0F-B19A-87F147F048FF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationSystem.Domain", "ReservationSystem.Domain\ReservationSystem.Domain.csproj", "{9D838B4B-C8DA-4272-8420-70929798C8AA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationSystem.Domain", "ReservationSystem.Domain\ReservationSystem.Domain.csproj", "{9D838B4B-C8DA-4272-8420-70929798C8AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReservationSystem.Infrastructure", "ReservationSystem.Infrastructure\ReservationSystem.Infrastructure.csproj", "{30DC72B8-69F8-4503-9F9A-6F7C9E57D645}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ReservationSystem.Infrastructure", "ReservationSystem.Infrastructure\ReservationSystem.Infrastructure.csproj", "{30DC72B8-69F8-4503-9F9A-6F7C9E57D645}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{702FA1B4-D513-4BB0-BB33-3EE992B04FE1}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

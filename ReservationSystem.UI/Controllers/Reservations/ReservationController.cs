@@ -1,11 +1,13 @@
-﻿namespace ReservationSystem.UI.Controllers
+﻿using ReservationSystem.UI.Controllers;
+
+namespace ReservationSystem.UI.Controllers
 {
-    public class ReservationController
+    public class ReservationController : IReservationsController
     {
         /// <summary>
         /// Displays the main menu
         /// </summary>
-        public static void DisplayMainMenu()
+        public void DisplayMainMenu()
         {
             Console.WriteLine("-----------------------");
             Console.WriteLine(">> Manage reservations");
@@ -20,31 +22,31 @@
             Console.WriteLine();
         }
 
-        public static void Create()
+        public void Create()
         {
             Console.Clear();
             Console.WriteLine("Create Reservation");
         }
 
-        public static void Get()
+        public void Get()
         {
             Console.Clear();
             Console.WriteLine("Get Reservation");
         }
 
-        public static void GetAll()
+        public void GetAll()
         {
             Console.Clear();
             Console.WriteLine("GetAll Reservation");
         }
 
-        public static void Update()
+        public void Update()
         {
             Console.Clear();
             Console.WriteLine("Update Reservation");
         }
 
-        public static void Delete()
+        public void Delete()
         {
             Console.Clear();
             Console.WriteLine("Delete Reservation");

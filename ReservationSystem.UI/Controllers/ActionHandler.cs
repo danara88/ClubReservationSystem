@@ -1,41 +1,65 @@
-﻿ using ReservationSystem.UI.Enums;
+﻿using ReservationSystem.UI.Enums;
 using ReservationSystem.UI.Helpers;
-using System.Reflection;
 
 namespace ReservationSystem.UI.Controllers
 {
-    public class ActionHandler
+    /// <summary>
+    /// This is the action handler.
+    /// Responsible of handling controller actions.
+    /// </summary>
+    public class ActionHandler : IActionHandler
     {
+        private readonly IClubTableController _clubTableController;
+        private readonly IReservationsController _reservationsController;
+        private readonly IUsersController _usersController;
+
+        public ActionHandler(IClubTableController clubTableController, IReservationsController reservationsController, IUsersController usersController)
+        {
+            _clubTableController = clubTableController;
+            _reservationsController = reservationsController;
+            _usersController = usersController;
+        }
+
+        /// <summary>
+        /// Executes the sub system actions
+        /// </summary>
+        /// <param name="controllerType"></param>
+        public void ExecuteSubActionLoop(Type controllerType)
+        {
+            int promptSubSystem = 0;
+            while (promptSubSystem == 0)
+            {
+                AppActionsEnum optionSelected = UIHelpers.GetSelectedAction();
+                int promptOut;
+                ExecuteAction(controllerType, optionSelected, out promptOut);
+                promptSubSystem = promptOut;
+            }
+        }
+
         /// <summary>
         /// Executes the correct action selected
         /// </summary>
         /// <param name="appControllerType"></param>
         /// <param name="appActionsEnum"></param>
-        public static void ExecuteAction(Type appControllerType, AppActionsEnum appActionsEnum, out int promptOut)
+        private void ExecuteAction(Type appControllerType, AppActionsEnum appActionsEnum, out int promptOut)
         {
             promptOut = 0;
-            object instance = Activator.CreateInstance(appControllerType)!;
             switch (appActionsEnum)
             {
                 case AppActionsEnum.Create:
-                    appControllerType.InvokeMember(Enum.GetName(typeof(AppActionsEnum), (int)AppActionsEnum.Create)!,
-                        BindingFlags.InvokeMethod, binder: null, target: instance, args: new object[] { });
+                    ExecuteActionByController(appControllerType, AppActionsEnum.Create);
                     break;
                 case AppActionsEnum.Get:
-                    appControllerType.InvokeMember(Enum.GetName(typeof(AppActionsEnum), (int)AppActionsEnum.Get)!,
-                       BindingFlags.InvokeMethod, binder: null, target: instance, args: new object[] { });
+                    ExecuteActionByController(appControllerType, AppActionsEnum.Get);
                     break;
                 case AppActionsEnum.GetAll:
-                    appControllerType.InvokeMember(Enum.GetName(typeof(AppActionsEnum), (int)AppActionsEnum.GetAll)!,
-                       BindingFlags.InvokeMethod, binder: null, target: instance, args: new object[] { });
+                    ExecuteActionByController(appControllerType, AppActionsEnum.GetAll);
                     break;
                 case AppActionsEnum.Update:
-                    appControllerType.InvokeMember(Enum.GetName(typeof(AppActionsEnum), (int)AppActionsEnum.Update)!,
-                        BindingFlags.InvokeMethod, binder: null, target: instance, args: new object[] { });
+                    ExecuteActionByController(appControllerType, AppActionsEnum.Update);
                     break;
                 case AppActionsEnum.Delete:
-                    appControllerType.InvokeMember(Enum.GetName(typeof(AppActionsEnum), (int)AppActionsEnum.Delete)!,
-                         BindingFlags.InvokeMethod, binder: null, target: instance, args: new object[] { });
+                    ExecuteActionByController(appControllerType, AppActionsEnum.Delete);
                     break;
                 case AppActionsEnum.Exit:
                     promptOut = 1;
@@ -53,18 +77,74 @@ namespace ReservationSystem.UI.Controllers
         }
 
         /// <summary>
-        /// Executes the sub system actions
+        /// Executes actions by controller type
         /// </summary>
         /// <param name="controllerType"></param>
-        public static void ExecuteSubActionLoop(Type controllerType)
+        /// <param name="appActionEnum"></param>
+        private void ExecuteActionByController(Type controllerType, AppActionsEnum appActionEnum)
         {
-            int promptSubSystem = 0;
-            while (promptSubSystem == 0)
+            if (controllerType == typeof(ClubTableController))
             {
-                AppActionsEnum optionSelected = UIHelpers.GetSelectedAction();
-                int promptOut;
-                ExecuteAction(controllerType, optionSelected, out promptOut);
-                promptSubSystem = promptOut;
+                switch (appActionEnum)
+                {
+                    case AppActionsEnum.Create:
+                        _clubTableController.Create();
+                        break;
+                    case AppActionsEnum.Get:
+                        _clubTableController.Get();
+                        break;
+                    case AppActionsEnum.GetAll:
+                        _clubTableController.GetAll();
+                        break;
+                    case AppActionsEnum.Update:
+                        _clubTableController.Update();
+                        break;
+                    case AppActionsEnum.Delete:
+                        _clubTableController.Delete();
+                        break;
+                }
+            }
+            if (controllerType == typeof(ReservationController))
+            {
+                switch (appActionEnum)
+                {
+                    case AppActionsEnum.Create:
+                        _reservationsController.Create();
+                        break;
+                    case AppActionsEnum.Get:
+                        _reservationsController.Get();
+                        break;
+                    case AppActionsEnum.GetAll:
+                        _reservationsController.GetAll();
+                        break;
+                    case AppActionsEnum.Update:
+                        _reservationsController.Update();
+                        break;
+                    case AppActionsEnum.Delete:
+                        _reservationsController.Delete();
+                        break;
+                }
+            }
+            if (controllerType == typeof(UserController))
+            {
+                switch (appActionEnum)
+                {
+                    case AppActionsEnum.Create:
+                        _usersController.Create();
+                        break;
+                    case AppActionsEnum.Get:
+                        _usersController.Get();
+                        break;
+                    case AppActionsEnum.GetAll:
+                        _usersController.GetAll();
+                        break;
+                    case AppActionsEnum.Update:
+                        _usersController.Update();
+                        break;
+                    case AppActionsEnum.Delete:
+                        _usersController.Delete();
+                        break;
+                }
             }
         }
     }

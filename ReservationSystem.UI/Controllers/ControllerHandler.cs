@@ -3,13 +3,35 @@ using ReservationSystem.UI.Helpers;
 
 namespace ReservationSystem.UI.Controllers
 {
-    public class ControllerHandler
+    /// <summary>
+    /// This is the controller handler.
+    /// Responsable of handling app controllers.
+    /// </summary>
+    public class ControllerHandler : IControllerHandler
     {
+        private readonly IActionHandler _actionHandler;
+        private readonly IClubTableController _clubTableController;
+        private readonly IReservationsController _reservationController;
+        private readonly IUsersController _usersController;
+
+
+        public ControllerHandler(
+            IActionHandler actionHandler, 
+            IClubTableController clubTableController, 
+            IReservationsController reservationController, 
+            IUsersController usersController)
+        {
+            _actionHandler = actionHandler;
+            _clubTableController = clubTableController;
+            _reservationController = reservationController;
+            _usersController = usersController;
+        }
+
         /// <summary>
-        /// Handles the app controllers
+        /// Handles app's controllers
         /// </summary>
         /// <param name="mainSelectedOption"></param>
-        public static void ExecuteController(AppMainOptionsEnum mainSelectedOption)
+        public void ExecuteController(AppMainOptionsEnum mainSelectedOption)
         {
             if (mainSelectedOption is AppMainOptionsEnum.ErrorNullEmpty || mainSelectedOption is AppMainOptionsEnum.ErrorFormat)
             {
@@ -21,21 +43,21 @@ namespace ReservationSystem.UI.Controllers
             {
                 case AppMainOptionsEnum.ManageReservations:
                     Console.Clear();
-                    ReservationController.DisplayMainMenu();
+                    _reservationController.DisplayMainMenu();
                     controllerType = typeof(ReservationController);
-                    ActionHandler.ExecuteSubActionLoop(controllerType);
+                    _actionHandler.ExecuteSubActionLoop(controllerType);
                     break;
                 case AppMainOptionsEnum.ManageClubTables:
                     Console.Clear();
-                    ClubTableController.DisplayMainMenu();
+                    _clubTableController.DisplayMainMenu();
                     controllerType = typeof(ClubTableController);
-                    ActionHandler.ExecuteSubActionLoop(controllerType);
+                    _actionHandler.ExecuteSubActionLoop(controllerType);
                     break;
                 case AppMainOptionsEnum.ManageUsers:
                     Console.Clear();
-                    UserController.DisplayMainMenu();
+                    _usersController.DisplayMainMenu();
                     controllerType = typeof(UserController);
-                    ActionHandler.ExecuteSubActionLoop(controllerType);
+                    _actionHandler.ExecuteSubActionLoop(controllerType);
                     break;
                 case AppMainOptionsEnum.ExitProgram:
                     Console.Clear();

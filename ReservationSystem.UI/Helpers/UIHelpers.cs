@@ -38,7 +38,7 @@ namespace ReservationSystem.UI.Helpers
         public static AppActionsEnum GetSelectedAction()
         {
             Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Select an option: ");
+            Console.Write("Select an option: ");
             Console.ForegroundColor = ConsoleColor.Gray;
 
             var selectedAction = Console.ReadLine();
@@ -71,6 +71,17 @@ namespace ReservationSystem.UI.Helpers
         }
 
         /// <summary>
+        /// Displays success message in UI
+        /// </summary>
+        /// <param name="message"></param>
+        public static void TriggerSuccessMessage(string message)
+        {
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine($"SUCCESS: {message}");
+            Console.ForegroundColor = ConsoleColor.Gray;
+        }
+
+        /// <summary>
         /// Prints the main menu
         /// </summary>
         public static void PrintMenu()
@@ -78,7 +89,9 @@ namespace ReservationSystem.UI.Helpers
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine("> Club Reservation System");
+            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
@@ -88,6 +101,20 @@ namespace ReservationSystem.UI.Helpers
             Console.WriteLine("1 - Manage club tables");
             Console.WriteLine("2 - Manage users");
             Console.WriteLine("3 - Exit program");
+            Console.WriteLine();
+        }
+
+        /// <summary>
+        /// Prints UI title
+        /// </summary>
+        /// <param name="title"></param>
+        public static void PrintTitle(string title)
+        {
+            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.WriteLine("----------------------------");
+            Console.WriteLine($">>> {title}");
+            Console.WriteLine("----------------------------");
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine();
         }
     }
