@@ -26,6 +26,19 @@ namespace ReservationSystem.Application.Services
         }
 
         /// <summary>
+        /// Get users by complete name
+        /// </summary>
+        /// <param name="completeName"></param>
+        /// <returns></returns>
+        public List<User> GetUsersByCompleteName(string completeName)
+        {
+            var users = _userRepository.GetAll()
+                                       .Where(u => u.CompleteName.IndexOf(completeName, StringComparison.OrdinalIgnoreCase) >= 0)
+                                       .ToList();
+            return users;
+        }
+
+        /// <summary>
         /// Deletes a user by ID
         /// </summary>
         /// <param name="Id"></param>
@@ -61,7 +74,7 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public bool UpdateUser(User user)
         {
-           return _userRepository.UpdateById(user);
+           return _userRepository.Update(user);
         }
     }
 }

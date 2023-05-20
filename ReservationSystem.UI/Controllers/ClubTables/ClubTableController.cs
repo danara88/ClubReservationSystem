@@ -1,5 +1,4 @@
-﻿using ConsoleTables;
-using ReservationSystem.Application.Services;
+﻿using ReservationSystem.Application.Services;
 using ReservationSystem.Domain.Entities;
 using ReservationSystem.UI.Helpers;
 
@@ -18,16 +17,21 @@ namespace ReservationSystem.UI.Controllers
         /// </summary>
         public void DisplayMainMenu()
         {
-            Console.WriteLine("-----------------------");
-            Console.WriteLine(">> Manage club tables");
-            Console.WriteLine("-----------------------");
+            Console.WriteLine("---------------------------");
+            Console.WriteLine(">> Manage club tables manu");
+            Console.WriteLine("---------------------------");
             Console.WriteLine();
-            Console.WriteLine("0 - Create club table");
-            Console.WriteLine("1 - Get club table");
-            Console.WriteLine("2 - Get all club tables");
-            Console.WriteLine("3 - Update a club table");
-            Console.WriteLine("4 - Delete a club table");
-            Console.WriteLine("5 - Go back");
+            Console.WriteLine(" 0) - Create club table");
+            Console.WriteLine();
+            Console.WriteLine(" 1) - Search club table");
+            Console.WriteLine();
+            Console.WriteLine(" 2) - List all club tables");
+            Console.WriteLine();
+            Console.WriteLine(" 3) - Update a club table");
+            Console.WriteLine();
+            Console.WriteLine(" 4) - Delete a club table");
+            Console.WriteLine();
+            Console.WriteLine(" 5) - Go back");
             Console.WriteLine();
         }
 
@@ -69,6 +73,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.FAILURE_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -77,7 +83,7 @@ namespace ReservationSystem.UI.Controllers
         public void Get()
         {
             Console.Clear();
-            UIHelpers.PrintTitle("Get Club Table");
+            UIHelpers.PrintTitle("Search Club Table");
 
             try
             {
@@ -87,7 +93,7 @@ namespace ReservationSystem.UI.Controllers
                 if (clubTable is not null)
                 {
                     var clubTables = new List<ClubTable>() { clubTable };
-                    PrintTable(clubTables);
+                    UIDataTables.PrintTableForClubTables(clubTables);
                 }
                 else
                 {
@@ -98,6 +104,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.INVALID_FORMAT_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -106,12 +114,14 @@ namespace ReservationSystem.UI.Controllers
         public void GetAll()
         {
             Console.Clear();
-            UIHelpers.PrintTitle("Get Club Tables");
+            UIHelpers.PrintTitle("List All Club Tables");
             var clubTables = _clubTableService.GetClubTables();
             if (clubTables is not null)
             {
-                PrintTable(clubTables);
+               UIDataTables.PrintTableForClubTables(clubTables);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -175,6 +185,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.NOT_FOUND_RESOURCE_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -211,21 +223,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.INVALID_FORMAT_MESSAGE);
             }
-        }
-
-        /// <summary>
-        /// Prints UI table
-        /// </summary>
-        /// <param name="clubTables"></param>
-        private void PrintTable(List<ClubTable> clubTables)
-        {
-            var table = new ConsoleTable("ID", "Category name", "Min consumption ($)", "Capacity", "Total available");
-            foreach (var clubTable in clubTables)
-            {
-                table.AddRow(clubTable.Id, clubTable.CategoryName, clubTable.MinConsumption, clubTable.Capacity, clubTable.TotalAvailable);
-            }
-            table.Write();
             Console.WriteLine();
+            DisplayMainMenu();
         }
     }
 }

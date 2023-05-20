@@ -15,6 +15,6 @@ namespace ReservationSystem.Infrastructure.Repositories
 
         public bool DeleteById(int id);
 
-        public bool UpdateById(User user);
+        public bool Update(User user);
     }
 }

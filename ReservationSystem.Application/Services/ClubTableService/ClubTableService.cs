@@ -62,7 +62,7 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public bool UpdateClubTable(ClubTable clubTable)
         {
-            return _clubTableRepository.UpdateById(clubTable);
+            return _clubTableRepository.Update(clubTable);
         }
     }
 }

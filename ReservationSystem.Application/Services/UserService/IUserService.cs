@@ -11,6 +11,8 @@ namespace ReservationSystem.Application.Services
 
         public List<User> GetUsers();
 
+        public List<User> GetUsersByCompleteName(string completeName);
+
         public User GetUser(int Id);
 
         public bool DeleteUser(int Id);

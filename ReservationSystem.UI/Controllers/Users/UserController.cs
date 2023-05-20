@@ -20,15 +20,20 @@ namespace ReservationSystem.UI.Controllers
         public void DisplayMainMenu()
         {
             Console.WriteLine("-----------------------");
-            Console.WriteLine(">> Manage users");
+            Console.WriteLine(">> Manage users menu");
             Console.WriteLine("-----------------------");
             Console.WriteLine();
-            Console.WriteLine("0 - Register a user");
-            Console.WriteLine("1 - Get user");
-            Console.WriteLine("2 - Get all users");
-            Console.WriteLine("3 - Update a user");
-            Console.WriteLine("4 - Delete a user");
-            Console.WriteLine("5 - Go back");
+            Console.WriteLine(" 0) - Register new user");
+            Console.WriteLine();
+            Console.WriteLine(" 1) - Search user");
+            Console.WriteLine();
+            Console.WriteLine(" 2) - List all users");
+            Console.WriteLine();
+            Console.WriteLine(" 3) - Update a user");
+            Console.WriteLine();
+            Console.WriteLine(" 4) - Delete a user");
+            Console.WriteLine();
+            Console.WriteLine(" 5) - Go back");
             Console.WriteLine();
         }
 
@@ -38,7 +43,7 @@ namespace ReservationSystem.UI.Controllers
         public void Create()
         {
             Console.Clear();
-            UIHelpers.PrintTitle("Create User");
+            UIHelpers.PrintTitle("Register new user");
 
             Console.Write("User complete name: ");
             var completeName = Console.ReadLine();
@@ -62,6 +67,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.FAILURE_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -70,7 +77,7 @@ namespace ReservationSystem.UI.Controllers
         public void Get()
         {
             Console.Clear();
-            UIHelpers.PrintTitle("Get User");
+            UIHelpers.PrintTitle("Search User");
 
             try
             {
@@ -80,7 +87,7 @@ namespace ReservationSystem.UI.Controllers
                 if (user is not null)
                 {
                     var users = new List<User>() { user };
-                    PrintTable(users);
+                    UIDataTables.PrintTableForUsers(users);
                 }
                 else
                 {
@@ -91,6 +98,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.INVALID_FORMAT_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -99,12 +108,14 @@ namespace ReservationSystem.UI.Controllers
         public void GetAll()
         {
             Console.Clear();
-            UIHelpers.PrintTitle("Get Users");
+            UIHelpers.PrintTitle("List All Users");
             var users = _userService.GetUsers();
             if (users is not null)
             {
-                PrintTable(users);
+               UIDataTables.PrintTableForUsers(users);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -160,6 +171,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.NOT_FOUND_RESOURCE_MESSAGE);
             }
+            Console.WriteLine();
+            DisplayMainMenu();
         }
 
         /// <summary>
@@ -196,21 +209,8 @@ namespace ReservationSystem.UI.Controllers
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.INVALID_FORMAT_MESSAGE);
             }
-        }
-
-        /// <summary>
-        /// Prints UI table
-        /// </summary>
-        /// <param name="clubTables"></param>
-        private void PrintTable(List<User> users)
-        {
-            var table = new ConsoleTable("ID", "Complete Name", "Phone number");
-            foreach (var user in users)
-            {
-                table.AddRow(user.Id, user.CompleteName, user.PhoneNumber);
-            }
-            table.Write();
             Console.WriteLine();
+            DisplayMainMenu();
         }
     }
 }

@@ -14,7 +14,6 @@ namespace ReservationSystem.UI.Controllers
         private readonly IReservationsController _reservationController;
         private readonly IUsersController _usersController;
 
-
         public ControllerHandler(
             IActionHandler actionHandler, 
             IClubTableController clubTableController, 

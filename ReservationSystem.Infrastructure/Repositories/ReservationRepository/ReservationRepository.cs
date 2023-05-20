@@ -6,35 +6,39 @@ using System.Data;
 namespace ReservationSystem.Infrastructure.Repositories
 {
     /// <summary>
-    /// User repository
+    /// Reservation repository
     /// </summary>
-    public class UserRepository : IUserRepository
+    public class ReservationRepository : IReservationRepository
     {
 
         private readonly string _connectionString = ConnectionSettings.CONNECTION_STRING;
 
-        public UserRepository()
+        public ReservationRepository()
         {
         }
 
         /// <summary>
-        /// Method to create a user
+        /// Method to create a reservation
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="reservation"></param>
         /// <returns></returns>
-        public bool Create(User user)
+        public bool Create(Reservation reservation)
         {
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"INSERT INTO Users (CompleteName,PhoneNumber) 
-                                    VALUES(@CompleteName,@PhoneNumber)";
+                    var query = @"INSERT INTO Reservations(UserId, ClubTableId, TotalGuests, ReservationDate, ExpirationDate)
+		                                      VALUES(@UserId, @ClubTableId, @TotalGuests, @ReservationDate, @ExpirationDate)";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
-                        sqlCommand.Parameters.Add(new SqlParameter("@CompleteName", user.CompleteName));
-                        sqlCommand.Parameters.Add(new SqlParameter("@PhoneNumber", user.PhoneNumber));
+                        sqlCommand.Parameters.Add(new SqlParameter("@UserId", reservation.UserId));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ClubTableId", reservation.ClubTableId));
+                        sqlCommand.Parameters.Add(new SqlParameter("@TotalGuests", reservation.TotalGuests));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ReservationDate", reservation.ReservationDate));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ExpirationDate", reservation.ExpirationDate));
+
                         int affectedArrows = sqlCommand.ExecuteNonQuery();
                         if (affectedArrows > 0)
                         {
@@ -54,7 +58,7 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Method to delete a user
+        /// Method to delete a reservation
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -65,7 +69,7 @@ namespace ReservationSystem.Infrastructure.Repositories
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"UPDATE Users SET IsDeleted = 1 WHERE Id = @Id and IsDeleted = 0";
+                    var query = @"UPDATE Reservations SET IsDeleted = 1 WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         sqlCommand.Parameters.Add(new SqlParameter("@Id", id));
@@ -88,17 +92,17 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Method to get all users
+        /// Method to get all reservations
         /// </summary>
         /// <returns></returns>
-        public List<User> GetAll()
+        public List<Reservation> GetAll()
         {
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM Users WHERE IsDeleted = 0";
+                    var query = @"SELECT * FROM Reservations WHERE IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
@@ -106,18 +110,21 @@ namespace ReservationSystem.Infrastructure.Repositories
                             var dataTable = new DataTable();
                             sqlDataAdapter.Fill(dataTable);
 
-                            var users = new List<User>() { };
+                            var reservations = new List<Reservation>() { };
 
                             foreach (DataRow row in dataTable.Rows)
                             {
-                                users.Add(new User
+                                reservations.Add(new Reservation
                                 {
                                     Id = (int)row["Id"],
-                                    CompleteName = row["CompleteName"].ToString()!,
-                                    PhoneNumber = row["PhoneNumber"].ToString()!,
+                                    UserId = (int)row["UserId"],
+                                    ClubTableId = (int)row["ClubTableId"],
+                                    TotalGuests = (int)row["TotalGuests"],
+                                    ReservationDate = DateTime.Parse(row["ReservationDate"].ToString()!),
+                                    ExpirationDate = DateTime.Parse(row["ExpirationDate"].ToString()!),
                                 });
                             }
-                            return users;
+                            return reservations;
                         }
 
                     }
@@ -130,18 +137,18 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Method to get user by ID
+        /// Method to get a reservationby ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public User GetById(int id)
+        public Reservation GetById(int id)
         {
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM Users WHERE Id = @Id and IsDeleted = 0";
+                    var query = @"SELECT * FROM Reservations WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         sqlCommand.Parameters.Add(new SqlParameter("@id", id));
@@ -150,18 +157,21 @@ namespace ReservationSystem.Infrastructure.Repositories
                             var dataTable = new DataTable();
                             sqlDataAdapter.Fill(dataTable);
 
-                            var users = new List<User>() { };
+                            var reservations = new List<Reservation>() { };
 
                             foreach (DataRow row in dataTable.Rows)
                             {
-                                users.Add(new User
+                                reservations.Add(new Reservation
                                 {
                                     Id = (int)row["Id"],
-                                    CompleteName = row["CompleteName"].ToString()!,
-                                    PhoneNumber = row["PhoneNumber"].ToString()!,
+                                    UserId = (int)row["UserId"],
+                                    ClubTableId = (int)row["ClubTableId"],
+                                    TotalGuests = (int)row["TotalGuests"],
+                                    ReservationDate = DateTime.Parse(row["ReservationDate"].ToString()!),
+                                    ExpirationDate = DateTime.Parse(row["ExpirationDate"].ToString()!),
                                 });
                             }
-                            return users[0];
+                            return reservations[0];
                         }
 
                     }
@@ -174,27 +184,32 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Method to update a user
+        /// Method to update a reservation
         /// </summary>
-        /// <param name="user"></param>
+        /// <param name="reservation"></param>
         /// <returns></returns>
-        public bool Update(User user)
+        public bool Update(Reservation reservation)
         {
             try
             {
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"UPDATE Users
-                                         SET CompleteName = @CompleteName, 
-                                             PhoneNumber = @PhoneNumber
+                    var query = @"UPDATE Reservations
+                                         SET UserId = @UserId, 
+                                             ClubTableId = @ClubTableId,
+                                             TotalGuests = @TotalGuests,
+                                             ReservationDate = @ReservationDate,
+                                             ExpirationDate = @ExpirationDate
                                              WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
-                        sqlCommand.Parameters.Add(new SqlParameter("@Id", user.Id));
-                        sqlCommand.Parameters.Add(new SqlParameter("@CompleteName", user.CompleteName));
-                        sqlCommand.Parameters.Add(new SqlParameter("@PhoneNumber", user.PhoneNumber));
-                        
+                        sqlCommand.Parameters.Add(new SqlParameter("@Id", reservation.Id));
+                        sqlCommand.Parameters.Add(new SqlParameter("@UserId", reservation.UserId));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ClubTableId", reservation.ClubTableId));
+                        sqlCommand.Parameters.Add(new SqlParameter("@TotalGuests", reservation.TotalGuests));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ReservationDate", reservation.ReservationDate));
+                        sqlCommand.Parameters.Add(new SqlParameter("@ExpirationDate", reservation.ExpirationDate));
                         int affectedArrows = sqlCommand.ExecuteNonQuery();
                         if (affectedArrows > 0)
                         {

@@ -1,12 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using System.Numerics;
 
 namespace ReservationSystem.Domain.Entities
 {
     /// <summary>
-    /// User entity
+    /// Reservation entity
     /// </summary>
-    public class User
+    public class Reservation
     {
         /// <summary>
         /// Primary key
@@ -14,16 +13,34 @@ namespace ReservationSystem.Domain.Entities
         public int Id { get; set; }
 
         /// <summary>
-        /// User complete name
+        /// User ID
         /// </summary>
         [Required]
-        public string CompleteName { get; set; }
+        public int UserId { get; set; }
 
         /// <summary>
-        /// User phone number
+        /// Club table ID
         /// </summary>
         [Required]
-        public string PhoneNumber { get; set; }
+        public int ClubTableId { get; set; }
+
+        /// <summary>
+        /// Total guests
+        /// </summary>
+        [Required]
+        public int TotalGuests { get; set; }
+
+        /// <summary>
+        /// Reservation date
+        /// </summary>
+        [Required]
+        public DateTime ReservationDate { get; set; }
+
+        /// <summary>
+        /// Reservation expiration date
+        /// </summary>
+        [Required]
+        public DateTime ExpirationDate { get; set; }
 
         /// <summary>
         /// User creation date and time
@@ -34,5 +51,6 @@ namespace ReservationSystem.Domain.Entities
         /// User updated date and time
         /// </summary>
         public DateTime UpdatedOn { get; set; }
+
     }
 }

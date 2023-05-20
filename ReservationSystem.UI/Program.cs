@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using ReservationSystem.Application.Services;
+using ReservationSystem.Application.Services.ReservationService;
 using ReservationSystem.Infrastructure.Repositories;
 using ReservationSystem.UI.Controllers;
 using ReservationSystem.UI.Helpers;
@@ -10,7 +11,7 @@ using ReservationSystem.UI.Helpers;
  */
 var hostBuilder = Host.CreateDefaultBuilder(args);
 hostBuilder = hostBuilder.ConfigureServices(ServiceConfiguration);
-using var host = hostBuilder.Build();
+using IHost host = hostBuilder.Build();
 
 Main();
 
@@ -38,7 +39,7 @@ void Main()
 void ServiceConfiguration(IServiceCollection services)
 {
     // Add your services here...
-
+   
     // Controllers
     services.AddTransient<IControllerHandler, ControllerHandler>();
     services.AddTransient<IActionHandler, ActionHandler>();
@@ -49,8 +50,10 @@ void ServiceConfiguration(IServiceCollection services)
     // Repositories
     services.AddTransient<IClubTableRepository, ClubTableRepository>();
     services.AddTransient<IUserRepository, UserRepository>();
+    services.AddTransient<IReservationRepository, ReservationRepository>();
 
     // Services
     services.AddTransient<IClubTableService, ClubTableService>();
     services.AddTransient<IUserService, UserService>();
+    services.AddTransient<IReservationService, ReservationService>();
 }

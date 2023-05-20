@@ -2,6 +2,9 @@
 
 namespace ReservationSystem.UI.Helpers
 {
+    /// <summary>
+    /// UI helpers
+    /// </summary>
     public static class UIHelpers
     {
         /// <summary>
@@ -89,18 +92,19 @@ namespace ReservationSystem.UI.Helpers
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine();
             Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine("> Club Reservation System");
-            Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
             Console.WriteLine();
             Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine("Available options: ");
             Console.WriteLine();
-            Console.WriteLine("0 - Manage reservations");
-            Console.WriteLine("1 - Manage club tables");
-            Console.WriteLine("2 - Manage users");
-            Console.WriteLine("3 - Exit program");
+            Console.WriteLine(" 0) - Manage reservations");
+            Console.WriteLine();
+            Console.WriteLine(" 1) - Manage club tables");
+            Console.WriteLine();
+            Console.WriteLine(" 2) - Manage users");
+            Console.WriteLine();
+            Console.WriteLine(" 3) - Exit program");
             Console.WriteLine();
         }
 

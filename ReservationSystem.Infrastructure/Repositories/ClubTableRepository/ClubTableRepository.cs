@@ -17,7 +17,7 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Inserts a club table in database
+        /// Method to create a club table
         /// </summary>
         /// <param name="clubTable"></param>
         /// <returns>Task<bool></returns>
@@ -55,7 +55,7 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Deletes a club table by ID
+        /// Method to delete a club table by ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -66,7 +66,7 @@ namespace ReservationSystem.Infrastructure.Repositories
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"DELETE FROM ClubTables WHERE Id = @Id";
+                    var query = @"UPDATE ClubTables SET IsDeleted = 1 WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         sqlCommand.Parameters.Add(new SqlParameter("@Id", id));
@@ -89,7 +89,7 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Gets all club tables from database
+        /// Method to get all club tables
         /// </summary>
         /// <returns></returns>
         public List<ClubTable> GetAll()
@@ -99,7 +99,7 @@ namespace ReservationSystem.Infrastructure.Repositories
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM ClubTables";
+                    var query = @"SELECT * FROM ClubTables WHERE IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
@@ -133,7 +133,7 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Gets a club table by ID
+        /// Method to get a club table by ID
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
@@ -144,7 +144,7 @@ namespace ReservationSystem.Infrastructure.Repositories
                 using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM ClubTables WHERE Id = @Id";
+                    var query = @"SELECT * FROM ClubTables WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         sqlCommand.Parameters.Add(new SqlParameter("@id", id));
@@ -179,11 +179,11 @@ namespace ReservationSystem.Infrastructure.Repositories
         }
 
         /// <summary>
-        /// Updates a club table by ID
+        /// Method to update a club table
         /// </summary>
         /// <param name="clubTable"></param>
         /// <returns></returns>
-        public bool UpdateById(ClubTable clubTable)
+        public bool Update(ClubTable clubTable)
         {
             try
             {
@@ -193,9 +193,9 @@ namespace ReservationSystem.Infrastructure.Repositories
                     var query = @"UPDATE ClubTables
                                          SET CategoryName = @CategoryName, 
                                              MinConsumption = @MinConsumption, 
-                                            Capacity = @Capacity, 
-                                            TotalAvailable = @TotalAvailable
-                                            WHERE Id = @Id";
+                                             Capacity = @Capacity, 
+                                             TotalAvailable = @TotalAvailable
+                                             WHERE Id = @Id and IsDeleted = 0";
                     using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
                     {
                         sqlCommand.Parameters.Add(new SqlParameter("@Id", clubTable.Id));
