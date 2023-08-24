@@ -16,6 +16,7 @@ I have built from scratch a MVC architecture pattern to include:
 - Controller section
 - View section
 
+![Archiecture](https://github.com/danara88/ClubReservationSystem/assets/72705694/fea74799-a8da-4d3c-b47b-96bdc9c88ab8)
 
 
 <!--- Eraser file: https://app.eraser.io/workspace/cQCFm5woEaEkj0O8mhh8 --->
