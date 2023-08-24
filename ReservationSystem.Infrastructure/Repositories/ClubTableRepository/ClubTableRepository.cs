@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ReservationSystem.Domain.Entities;
 using ReservationSystem.Infrastructure.Data;
-using System.Data;
 
 namespace ReservationSystem.Infrastructure.Repositories
 {
@@ -94,42 +93,42 @@ namespace ReservationSystem.Infrastructure.Repositories
         /// <returns></returns>
         public List<ClubTable> GetAll()
         {
-            try
+            var clubTables = new List<ClubTable>() { };
+            string query = @"SELECT Id, CategoryName, MinConsumption, Capacity, TotalAvailable 
+                                        FROM ClubTables WHERE IsDeleted = 0";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+                try
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM ClubTables WHERE IsDeleted = 0";
-                    using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                        var clubTable = new ClubTable()
                         {
-                            var dataTable = new DataTable();
-                            sqlDataAdapter.Fill(dataTable);
-
-                            var clubTables = new List<ClubTable>() { };
-
-                            foreach (DataRow row in dataTable.Rows)
-                            {
-                                clubTables.Add(new ClubTable
-                                {
-                                    Id = (int)row["Id"],
-                                    CategoryName = row["CategoryName"].ToString()!,
-                                    MinConsumption = (decimal)row["MinConsumption"],
-                                    Capacity = (int)row["Capacity"],
-                                    TotalAvailable = (int)row["TotalAvailable"]
-                                });
-                            }
-                            return clubTables;
-                        }
-
+                            Id = reader.GetInt32(0),
+                            CategoryName = reader.GetString(1),
+                            MinConsumption = reader.GetDecimal(2),
+                            Capacity = reader.GetInt32(3),
+                            TotalAvailable = reader.GetInt32(4)
+                        };
+                        clubTables.Add(clubTable);
                     }
+
+                    reader.Close();
+                    sqlConnection.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Something went wrong while connecting to database. {ex.Message}");
                 }
             }
-            catch (Exception)
-            {
-                return null;
-            }
+            return clubTables;
         }
 
         /// <summary>
@@ -139,42 +138,40 @@ namespace ReservationSystem.Infrastructure.Repositories
         /// <returns></returns>
         public ClubTable GetById(int id)
         {
-            try
+            string query = @"SELECT Id, CategoryName, MinConsumption, Capacity, TotalAvailable 
+                                        FROM ClubTables WHERE Id = @Id and IsDeleted = 0";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.Parameters.Add(new SqlParameter("@id", id));
+
+                try
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM ClubTables WHERE Id = @Id and IsDeleted = 0";
-                    using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+
+                  
+                    var clubTable = new ClubTable()
                     {
-                        sqlCommand.Parameters.Add(new SqlParameter("@id", id));
-                        using (SqlDataAdapter  sqlDataAdapter = new SqlDataAdapter(sqlCommand))
-                        {
-                            var dataTable = new DataTable();
-                            sqlDataAdapter.Fill(dataTable);
+                        Id = reader.GetInt32(0),
+                        CategoryName = reader.GetString(1),
+                        MinConsumption = reader.GetDecimal(2),
+                        Capacity = reader.GetInt32(3),
+                        TotalAvailable = reader.GetInt32(4)
+                    };
 
-                            var clubTables = new List<ClubTable>() { };
+                    reader.Close();
+                    sqlConnection.Close();
 
-                            foreach (DataRow row in dataTable.Rows)
-                            {
-                                clubTables.Add(new ClubTable
-                                {
-                                    Id = (int)row["Id"],
-                                    CategoryName = row["CategoryName"].ToString()!,
-                                    MinConsumption = (decimal)row["MinConsumption"],
-                                    Capacity = (int)row["Capacity"],
-                                    TotalAvailable = (int)row["TotalAvailable"]
-                                });
-                            }
-                            return clubTables[0];
-                        }
-
-                    }
+                    return clubTable;
                 }
-            }
-            catch (Exception)
-            {
-                return null;
+                catch (Exception ex)
+                {
+                    throw new Exception($"Something went wrong while connecting to database. {ex.Message}");
+                }
             }
         }
 

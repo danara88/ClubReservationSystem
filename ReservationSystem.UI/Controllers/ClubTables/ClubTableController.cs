@@ -87,23 +87,25 @@ namespace ReservationSystem.UI.Controllers
 
             try
             {
-                Console.Write("Category ID: ");
-                var id = int.Parse(Console.ReadLine()!);
-                var clubTable = _clubTableService.GetClubTable(id);
+                Console.Write("Insert category ID: ");
+                var clubTableId = int.Parse(Console.ReadLine()!);
+
+                var clubTable = _clubTableService.GetClubTable(clubTableId);
                 if (clubTable is not null)
                 {
                     var clubTables = new List<ClubTable>() { clubTable };
                     UIDataTables.PrintTableForClubTables(clubTables);
                 }
-                else
-                {
-                    throw new Exception();
-                }
             }
-            catch (Exception)
+            catch(FormatException)
             {
                 UIHelpers.TriggerErrorMessage(AppConsts.INVALID_FORMAT_MESSAGE);
             }
+            catch (Exception)
+            {
+                UIHelpers.TriggerErrorMessage(AppConsts.FAILURE_MESSAGE);
+            }
+
             Console.WriteLine();
             DisplayMainMenu();
         }

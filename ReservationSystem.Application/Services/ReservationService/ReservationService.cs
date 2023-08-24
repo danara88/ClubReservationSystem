@@ -79,37 +79,13 @@ namespace ReservationSystem.Application.Services.ReservationService
         /// <returns></returns>
         public ReservationDto GetReservationDto(int Id)
         {
-            var reservation = _reservationRepository.GetById(Id);
-            var user = _userRepository.GetById(reservation.UserId);
-            var clubTable = _clubTableRepository.GetById(reservation.ClubTableId);
-
-            return new ReservationDto()
+            try
             {
-                Id = reservation.Id,
-                AdminName = user.CompleteName,
-                UserId = user.Id,
-                AdminPhoneNumber = user.PhoneNumber,
-                ClubTableName = clubTable.CategoryName,
-                ClubTableId = clubTable.Id,
-                TotalGuests = reservation.TotalGuests,
-                ReservationDate = reservation.ReservationDate,
-                ExpirationDate = reservation.ExpirationDate
-            };
-        }
-
-        /// <summary>
-        /// Gets all the reservations
-        /// </summary>
-        /// <returns></returns>
-        public List<ReservationDto> GetReservationsDto()
-        {
-            var reservationsDto = new List<ReservationDto>();
-            var reservations = _reservationRepository.GetAll();
-            foreach (var reservation in reservations)
-            {
+                var reservation = _reservationRepository.GetById(Id);
                 var user = _userRepository.GetById(reservation.UserId);
                 var clubTable = _clubTableRepository.GetById(reservation.ClubTableId);
-                var reservationDto = new ReservationDto()
+
+                return new ReservationDto()
                 {
                     Id = reservation.Id,
                     AdminName = user.CompleteName,
@@ -121,7 +97,48 @@ namespace ReservationSystem.Application.Services.ReservationService
                     ReservationDate = reservation.ReservationDate,
                     ExpirationDate = reservation.ExpirationDate
                 };
-                reservationsDto.Add(reservationDto);
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
+        }
+
+        /// <summary>
+        /// Gets all the reservations
+        /// </summary>
+        /// <returns></returns>
+        public List<ReservationDto> GetReservationsDto()
+        {
+            var reservationsDto = new List<ReservationDto>();
+
+            try
+            {
+                var reservations = _reservationRepository.GetAll();
+
+                foreach (var reservation in reservations)
+                {
+                    var user = _userRepository.GetById(reservation.UserId);
+                    var clubTable = _clubTableRepository.GetById(reservation.ClubTableId);
+                    var reservationDto = new ReservationDto()
+                    {
+                        Id = reservation.Id,
+                        AdminName = user.CompleteName,
+                        UserId = user.Id,
+                        AdminPhoneNumber = user.PhoneNumber,
+                        ClubTableName = clubTable.CategoryName,
+                        ClubTableId = clubTable.Id,
+                        TotalGuests = reservation.TotalGuests,
+                        ReservationDate = reservation.ReservationDate,
+                        ExpirationDate = reservation.ExpirationDate
+                    };
+
+                    reservationsDto.Add(reservationDto);
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception();
             }
 
             reservationsDto = reservationsDto.Where(reservation => reservation.ReservationDate >= DateTime.Now).ToList();

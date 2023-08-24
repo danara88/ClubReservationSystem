@@ -55,7 +55,14 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public User GetUser(int Id)
         {
-            return _userRepository.GetById(Id);
+            try
+            {
+                return _userRepository.GetById(Id);
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>
@@ -64,7 +71,14 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public List<User> GetUsers()
         {
-            return _userRepository.GetAll();
+            try
+            {
+                return _userRepository.GetAll();
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>

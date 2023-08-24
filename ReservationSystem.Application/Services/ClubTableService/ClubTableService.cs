@@ -43,7 +43,14 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public ClubTable GetClubTable(int Id)
         {
-            return _clubTableRepository.GetById(Id);
+            try
+            {
+                return _clubTableRepository.GetById(Id);
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>
@@ -52,7 +59,15 @@ namespace ReservationSystem.Application.Services
         /// <returns></returns>
         public List<ClubTable> GetClubTables()
         {
-            return _clubTableRepository.GetAll();
+            try
+            {
+                return _clubTableRepository.GetAll();
+
+            }
+            catch (Exception)
+            {
+                throw new Exception();
+            }
         }
 
         /// <summary>

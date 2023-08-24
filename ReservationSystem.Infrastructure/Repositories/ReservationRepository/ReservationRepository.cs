@@ -1,7 +1,6 @@
 ﻿using Microsoft.Data.SqlClient;
 using ReservationSystem.Domain.Entities;
 using ReservationSystem.Infrastructure.Data;
-using System.Data;
 
 namespace ReservationSystem.Infrastructure.Repositories
 {
@@ -97,43 +96,43 @@ namespace ReservationSystem.Infrastructure.Repositories
         /// <returns></returns>
         public List<Reservation> GetAll()
         {
-            try
+            var reservations = new List<Reservation>();
+            string query = @"SELECT Id, UserId, ClubTableId, TotalGuests, ReservationDate, ExpirationDate 
+                                    FROM Reservations WHERE IsDeleted = 0";
+           
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+
+                try
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM Reservations WHERE IsDeleted = 0";
-                    using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+
+                    while (reader.Read())
                     {
-                        using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
+                        var reservation = new Reservation()
                         {
-                            var dataTable = new DataTable();
-                            sqlDataAdapter.Fill(dataTable);
-
-                            var reservations = new List<Reservation>() { };
-
-                            foreach (DataRow row in dataTable.Rows)
-                            {
-                                reservations.Add(new Reservation
-                                {
-                                    Id = (int)row["Id"],
-                                    UserId = (int)row["UserId"],
-                                    ClubTableId = (int)row["ClubTableId"],
-                                    TotalGuests = (int)row["TotalGuests"],
-                                    ReservationDate = DateTime.Parse(row["ReservationDate"].ToString()!),
-                                    ExpirationDate = DateTime.Parse(row["ExpirationDate"].ToString()!),
-                                });
-                            }
-                            return reservations;
-                        }
-
+                            Id = reader.GetInt32(0),
+                            UserId = reader.GetInt32(1),
+                            ClubTableId = reader.GetInt32(2),
+                            TotalGuests = reader.GetInt32(3),
+                            ReservationDate = reader.GetDateTime(4),
+                            ExpirationDate = reader.GetDateTime(5),
+                        };
+                        reservations.Add(reservation);
                     }
+
+                    reader.Close();
+                    sqlConnection.Close();
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception($"Something went wrong while connecting to database. {ex.Message}");
                 }
             }
-            catch (Exception)
-            {
-                return null;
-            }
+            return reservations;
         }
 
         /// <summary>
@@ -143,43 +142,41 @@ namespace ReservationSystem.Infrastructure.Repositories
         /// <returns></returns>
         public Reservation GetById(int id)
         {
-            try
+            string query = @"SELECT Id, UserId, ClubTableId, TotalGuests, ReservationDate, ExpirationDate 
+                                    FROM Reservations WHERE Id = @Id and IsDeleted = 0";
+
+            using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
             {
-                using (SqlConnection sqlConnection = new SqlConnection(_connectionString))
+                SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                sqlCommand.Parameters.Add(new SqlParameter("@id", id));
+
+                try
                 {
                     sqlConnection.Open();
-                    var query = @"SELECT * FROM Reservations WHERE Id = @Id and IsDeleted = 0";
-                    using (SqlCommand sqlCommand = new SqlCommand(query, sqlConnection))
+
+                    SqlDataReader reader = sqlCommand.ExecuteReader();
+                    reader.Read();
+
+                    
+                    var reservation = new Reservation()
                     {
-                        sqlCommand.Parameters.Add(new SqlParameter("@id", id));
-                        using (SqlDataAdapter sqlDataAdapter = new SqlDataAdapter(sqlCommand))
-                        {
-                            var dataTable = new DataTable();
-                            sqlDataAdapter.Fill(dataTable);
+                        Id = reader.GetInt32(0),
+                        UserId = reader.GetInt32(1),
+                        ClubTableId = reader.GetInt32(2),
+                        TotalGuests = reader.GetInt32(3),
+                        ReservationDate = reader.GetDateTime(4),
+                        ExpirationDate = reader.GetDateTime(5),
+                    };
 
-                            var reservations = new List<Reservation>() { };
+                    reader.Close();
+                    sqlConnection.Close();
 
-                            foreach (DataRow row in dataTable.Rows)
-                            {
-                                reservations.Add(new Reservation
-                                {
-                                    Id = (int)row["Id"],
-                                    UserId = (int)row["UserId"],
-                                    ClubTableId = (int)row["ClubTableId"],
-                                    TotalGuests = (int)row["TotalGuests"],
-                                    ReservationDate = DateTime.Parse(row["ReservationDate"].ToString()!),
-                                    ExpirationDate = DateTime.Parse(row["ExpirationDate"].ToString()!),
-                                });
-                            }
-                            return reservations[0];
-                        }
-
-                    }
+                    return reservation;
                 }
-            }
-            catch (Exception)
-            {
-                return null;
+                catch (Exception ex)
+                {
+                    throw new Exception($"Something went wrong while connecting to database. {ex.Message}");
+                }
             }
         }
 
